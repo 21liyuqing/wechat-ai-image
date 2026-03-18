@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AI文生图 - UI/UX 原型</title>
+  <!-- Material Design 字体：Google Fonts Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================
+       Material Design 设计系统变量
+       - 主色：Indigo 500
+       - 强调色：Amber 500
+       - 表面色：浅灰背景
+       - 阴影层级：elevation 1-8
+       ============================================ */
+    :root {
+      /* Material Design 主色系 */
+      --md-primary: #6366F1;
+      --md-primary-variant: #4F46E5;
+      --md-primary-container: #E0E7FF;
+      --md-on-primary: #FFFFFF;
+      --md-on-primary-container: #1E1B4B;
+
+      --md-secondary: #F59E0B;
+      --md-secondary-variant: #D97706;
+      --md-on-secondary: #FFFFFF;
+
+      /* 表面与背景 */
+      --md-surface: #FFFFFF;
+      --md-surface-variant: #F8FAFC;
+      --md-background: #F1F5F9;
+      --md-on-surface: #1E293B;
+      --md-on-surface-variant: #64748B;
+      --md-outline: #E2E8F0;
+
+      /* 状态色 */
+      --md-error: #EF4444;
+      --md-success: #22C55E;
+      --md-on-error: #FFFFFF;
+
+      /* 阴影层级 (Material Design Elevation) */
+      --md-elevation-1: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+      --md-elevation-2: 0 3px 6px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.12);
+      --md-elevation-4: 0 6px 10px rgba(0,0,0,0.14), 0 1px 3px rgba(0,0,0,0.08);
+      --md-elevation-6: 0 10px 20px rgba(0,0,0,0.15), 0 3px 6px rgba(0,0,0,0.10);
+      --md-elevation-8: 0 15px 25px rgba(0,0,0,0.15), 0 5px 10px rgba(0,0,0,0.05);
+
+      /* 圆角 */
+      --md-radius-sm: 4px;
+      --md-radius-md: 8px;
+      --md-radius-lg: 12px;
+      --md-radius-xl: 16px;
+
+      /* 动效时长 */
+      --md-duration-short: 150ms;
+      --md-duration-medium: 250ms;
+      --md-duration-long: 350ms;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Sans SC', 'Roboto', sans-serif;
+      background: var(--md-background);
+      color: var(--md-on-surface);
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding-bottom: env(safe-area-inset-bottom, 0);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ============================================
+       顶部应用栏 (Top App Bar)
+       用途：品牌标识、页面标题，符合 Material Design 3 规范
+       ============================================ */
+    .app-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      padding-top: calc(16px + env(safe-area-inset-top, 0));
+      background: var(--md-surface);
+      box-shadow: var(--md-elevation-2);
+      transition: box-shadow var(--md-duration-medium) ease;
+    }
+
+    .app-bar__title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--md-on-surface);
+      letter-spacing: -0.02em;
+    }
+
+    /* ============================================
+       主内容区 (Main Content)
+       用途：承载输入、选择、生成全流程，移动端优先布局
+       ============================================ */
+    .main-content {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 20px 16px 24px;
+    }
+
+    /* ============================================
+       卡片容器 (Card Container)
+       用途：分组内容，提供视觉层次感
+       ============================================ */
+    .card {
+      background: var(--md-surface);
+      border-radius: var(--md-radius-lg);
+      box-shadow: var(--md-elevation-1);
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: box-shadow var(--md-duration-medium) ease;
+    }
+
+    .card:hover {
+      box-shadow: var(--md-elevation-2);
+    }
+
+    /* ============================================
+       区块标题 (Section Label)
+       用途：引导用户理解当前操作区
+       ============================================ */
+    .section-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--md-on-surface-variant);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    /* ============================================
+       多行文本输入框 (Outlined Text Field)
+       用途：用户输入图片描述/提示词，Material Design 轮廓样式
+       ============================================ */
+    .text-field {
+      width: 100%;
+      min-height: 100px;
+      padding: 14px 16px;
+      font-size: 16px;
+      font-family: inherit;
+      color: var(--md-on-surface);
+      background: var(--md-surface);
+      border: 2px solid var(--md-outline);
+      border-radius: var(--md-radius-md);
+      resize: vertical;
+      transition: border-color var(--md-duration-short), box-shadow var(--md-duration-short);
+      outline: none;
+    }
+
+    .text-field::placeholder {
+      color: var(--md-on-surface-variant);
+    }
+
+    .text-field:focus {
+      border-color: var(--md-primary);
+      box-shadow: 0 0 0 1px var(--md-primary);
+    }
+
+    /* ============================================
+       图片类型选择器 (Image Type Selector)
+       用途：人物、动漫、通用三种类型，默认选中通用
+       ============================================ */
+    .type-selector {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .type-chip {
+      flex: 1;
+      min-width: 90px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      background: var(--md-surface-variant);
+      border: 2px solid transparent;
+      border-radius: var(--md-radius-lg);
+      cursor: pointer;
+      transition: all var(--md-duration-short) ease;
+      user-select: none;
+    }
+
+    .type-chip:hover {
+      background: var(--md-primary-container);
+    }
+
+    .type-chip--selected {
+      background: var(--md-primary);
+      color: var(--md-on-primary);
+      box-shadow: var(--md-elevation-2);
+    }
+
+    .type-chip--selected:hover {
+      background: var(--md-primary-variant);
+      transform: translateY(-1px);
+    }
+
+    /* Ripple 效果模拟（CSS 实现） */
+    .type-chip:active {
+      transform: scale(0.98);
+    }
+
+    /* ============================================
+       提示词案例选择区 (Prompt Examples)
+       用途：预设案例，点击填充到输入框，降低用户输入成本
+       ============================================ */
+    .prompt-examples {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .prompt-chip {
+      display: block;
+      padding: 14px 16px;
+      font-size: 14px;
+      color: var(--md-on-surface);
+      background: var(--md-surface-variant);
+      border: 1px solid var(--md-outline);
+      border-radius: var(--md-radius-md);
+      text-align: left;
+      cursor: pointer;
+      transition: all var(--md-duration-short) ease;
+      position: relative;
+    }
+
+    .prompt-chip:hover {
+      background: var(--md-primary-container);
+      border-color: var(--md-primary);
+      box-shadow: var(--md-elevation-1);
+    }
+
+    .prompt-chip:active {
+      transform: scale(0.99);
+    }
+
+    /* ============================================
+       生成按钮 (Filled Button - Primary CTA)
+       用途：发起图片生成，主操作按钮，高视觉权重
+       ============================================ */
+    .generate-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 16px 24px;
+      margin-top: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: inherit;
+      color: var(--md-on-primary);
+      background: var(--md-primary);
+      border: none;
+      border-radius: var(--md-radius-lg);
+      box-shadow: var(--md-elevation-4);
+      cursor: pointer;
+      transition: all var(--md-duration-medium) ease;
+    }
+
+    .generate-btn:hover {
+      background: var(--md-primary-variant);
+      box-shadow: var(--md-elevation-6);
+      transform: translateY(-2px);
+    }
+
+    .generate-btn:active {
+      transform: translateY(0);
+      box-shadow: var(--md-elevation-2);
+    }
+
+    .generate-btn:disabled {
+      background: var(--md-on-surface-variant);
+      color: var(--md-surface);
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* 加载状态 */
+    .generate-btn--loading .btn-icon {
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* ============================================
+       图片结果展示区 (Image Result Area)
+       用途：展示 AI 生成的图片，支持空状态、加载态、结果态
+       ============================================ */
+    .result-area {
+      margin-top: 24px;
+      border-radius: var(--md-radius-xl);
+      overflow: hidden;
+      box-shadow: var(--md-elevation-4);
+      min-height: 280px;
+      background: var(--md-surface-variant);
+    }
+
+    /* 空状态占位 */
+    .result-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 280px;
+      padding: 32px;
+      color: var(--md-on-surface-variant);
+      text-align: center;
+    }
+
+    .result-placeholder__icon {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .result-placeholder__text {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* 加载状态骨架屏 */
+    .result-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 280px;
+      padding: 32px;
+    }
+
+    .skeleton {
+      width: 100%;
+      height: 100%;
+      min-height: 240px;
+      background: linear-gradient(
+        90deg,
+        var(--md-surface-variant) 25%,
+        var(--md-outline) 50%,
+        var(--md-surface-variant) 75%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* 生成结果图片 */
+    .result-image-wrap {
+      position: relative;
+    }
+
+    .result-image {
+      width: 100%;
+      display: block;
+      vertical-align: middle;
+      animation: fadeIn var(--md-duration-long) ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* ============================================
+       结果操作区 (Result Actions)
+       用途：生成图片后可「保存到相册」或「重新生成」
+       ============================================ */
+    .result-actions {
+      display: flex;
+      gap: 12px;
+      padding: 16px;
+      background: var(--md-surface);
+      border-top: 1px solid var(--md-outline);
+    }
+
+    .result-action-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
+      border-radius: var(--md-radius-lg);
+      cursor: pointer;
+      transition: all var(--md-duration-short) ease;
+      border: none;
+    }
+
+    /* 次要操作：保存到相册 */
+    .result-action-btn--save {
+      background: var(--md-surface-variant);
+      color: var(--md-primary);
+      border: 2px solid var(--md-primary);
+    }
+
+    .result-action-btn--save:hover {
+      background: var(--md-primary-container);
+    }
+
+    .result-action-btn--save:active {
+      transform: scale(0.98);
+    }
+
+    /* 主要操作：重新生成 */
+    .result-action-btn--regenerate {
+      background: var(--md-primary);
+      color: var(--md-on-primary);
+      box-shadow: var(--md-elevation-2);
+    }
+
+    .result-action-btn--regenerate:hover {
+      background: var(--md-primary-variant);
+      box-shadow: var(--md-elevation-4);
+    }
+
+    .result-action-btn--regenerate:active {
+      transform: scale(0.98);
+    }
+
+    /* ============================================
+       底部安全区 (Bottom Safe Area)
+       用途：适配刘海屏、Home 指示条等
+       ============================================ */
+    .bottom-safe {
+      height: env(safe-area-inset-bottom, 20px);
+    }
+
+    /* ============================================
+       原型说明横幅 (Prototype Notice)
+       用途：标识此为 UI 原型，非正式产品
+       ============================================ */
+    .prototype-notice {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 8px 16px;
+      font-size: 12px;
+      color: var(--md-on-surface-variant);
+      background: var(--md-surface);
+      border-radius: 20px;
+      box-shadow: var(--md-elevation-4);
+      z-index: 50;
+    }
+  </style>
+</head>
+<body>
+  <!--
+    =============================================
+    AI文生图 - UI/UX 原型结构说明
+    基于 Material Design 3，移动端优先
+    =============================================
+  -->
+
+  <!-- 顶部应用栏：品牌与页面标识 -->
+  <header class="app-bar">
+    <h1 class="app-bar__title">AI文生图</h1>
+  </header>
+
+  <main class="main-content">
+    <!-- 输入与配置卡片 -->
+    <section class="card">
+      <label class="section-label" for="prompt-input">描述你想生成的画面</label>
+      <textarea
+        id="prompt-input"
+        class="text-field"
+        placeholder="例如：一只橘猫在阳光下打盹，油画风格"
+        maxlength="500"
+      ></textarea>
+    </section>
+
+    <!-- 图片类型选择卡片 -->
+    <section class="card">
+      <span class="section-label">图片类型</span>
+      <div class="type-selector" role="group" aria-label="选择图片类型">
+        <button type="button" class="type-chip" data-type="character">人物</button>
+        <button type="button" class="type-chip" data-type="anime">动漫</button>
+        <button type="button" class="type-chip type-chip--selected" data-type="general">通用</button>
+      </div>
+    </section>
+
+    <!-- 提示词案例卡片 -->
+    <section class="card">
+      <span class="section-label">快速选择示例</span>
+      <div class="prompt-examples">
+        <button type="button" class="prompt-chip" data-prompt="一只橘猫在阳光下打盹，油画风格">一只橘猫在阳光下打盹，油画风格</button>
+        <button type="button" class="prompt-chip" data-prompt="赛博朋克风格的城市夜景，霓虹灯闪烁">赛博朋克风格的城市夜景，霓虹灯闪烁</button>
+        <button type="button" class="prompt-chip" data-prompt="二次元少女，樱花树下，唯美插画">二次元少女，樱花树下，唯美插画</button>
+        <button type="button" class="prompt-chip" data-prompt="现代简约风格室内设计，白色主调">现代简约风格室内设计，白色主调</button>
+      </div>
+    </section>
+
+    <!-- 生成按钮 -->
+    <button type="button" class="generate-btn" id="generate-btn">
+      <span class="btn-icon">✨</span>
+      <span>生成图片</span>
+    </button>
+
+    <!-- 结果展示区：空状态 / 加载 / 图片 -->
+    <div class="result-area" id="result-area">
+      <div class="result-placeholder" id="result-placeholder">
+        <svg class="result-placeholder__icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+        </svg>
+        <p class="result-placeholder__text">输入描述并点击「生成图片」，等待 AI 为你创作</p>
+      </div>
+      <!-- 加载态（默认隐藏，交互时显示） -->
+      <div class="result-loading" id="result-loading" style="display: none;">
+        <div class="skeleton"></div>
+      </div>
+      <!-- 图片结果 + 操作按钮（默认隐藏，生成成功后显示） -->
+      <div class="result-success" id="result-success" style="display: none;">
+        <img class="result-image" id="result-image" src="" alt="生成结果">
+        <!-- 生成结果后的操作区：保存到相册、重新生成 -->
+        <div class="result-actions">
+          <button type="button" class="result-action-btn result-action-btn--save" id="save-btn">💾 保存到相册</button>
+          <button type="button" class="result-action-btn result-action-btn--regenerate" id="regenerate-btn">🔄 重新生成</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-safe"></div>
+  </main>
+
+  <div class="prototype-notice">UI/UX 原型 · 仅供参考</div>
+
+  <script>
+    /**
+     * 原型交互脚本 - 仅用于演示交互效果
+     * 不包含真实 API 调用
+     */
+
+    // 图片类型选择
+    document.querySelectorAll('.type-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.type-chip').forEach(c => c.classList.remove('type-chip--selected'));
+        chip.classList.add('type-chip--selected');
+      });
+    });
+
+    // 提示词案例点击填充
+    document.querySelectorAll('.prompt-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const prompt = chip.dataset.prompt;
+        document.getElementById('prompt-input').value = prompt;
+      });
+    });
+
+    // 生成按钮交互（模拟加载与结果）
+    const btn = document.getElementById('generate-btn');
+    const placeholder = document.getElementById('result-placeholder');
+    const loading = document.getElementById('result-loading');
+    const resultSuccess = document.getElementById('result-success');
+    const resultImg = document.getElementById('result-image');
+
+    function doGenerate() {
+      const input = document.getElementById('prompt-input');
+      if (!input.value.trim()) {
+        alert('请先输入或选择一个描述');
+        return;
+      }
+
+      // 进入加载态
+      btn.disabled = true;
+      btn.classList.add('generate-btn--loading');
+      btn.querySelector('.btn-icon').textContent = '⏳';
+      placeholder.style.display = 'none';
+      resultSuccess.style.display = 'none';
+      loading.style.display = 'flex';
+
+      // 模拟 API 调用延迟
+      setTimeout(() => {
+        resultImg.src = 'https://picsum.photos/400/280?random=' + Date.now();
+        resultImg.onload = () => {
+          loading.style.display = 'none';
+          resultSuccess.style.display = 'block';
+        };
+        btn.disabled = false;
+        btn.classList.remove('generate-btn--loading');
+        btn.querySelector('.btn-icon').textContent = '✨';
+      }, 2000);
+    }
+
+    btn.addEventListener('click', doGenerate);
+
+    // 保存到相册（原型中模拟提示）
+    document.getElementById('save-btn').addEventListener('click', () => {
+      alert('小程序环境中将调用 wx.saveImageToPhotosAlbum 保存到本地相册');
+    });
+
+    // 重新生成：复用当前提示词，再次发起生成
+    document.getElementById('regenerate-btn').addEventListener('click', doGenerate);
+  </script>
+</body>
+</html>
