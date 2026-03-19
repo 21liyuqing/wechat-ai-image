@@ -1,0 +1,8 @@
+/**app.wxss - 全局样式 */
+page {
+  background-color: #f1f5f9;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 28rpx;
+  color: #1e293b;
+  box-sizing: border-box;
+}

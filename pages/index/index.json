@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "image-result": "/components/image-result/image-result"
+  },
+  "navigationBarTitleText": "AI 图片生成"
+}

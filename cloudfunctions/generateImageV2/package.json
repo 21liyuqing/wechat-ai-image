@@ -1,0 +1,6 @@
+{
+  "name": "generateImageV2",
+  "version": "1.0.0",
+  "description": "调用 Coze 工作流生成图片",
+  "main": "index.js"
+}

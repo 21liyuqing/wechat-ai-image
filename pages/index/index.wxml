@@ -1,0 +1,68 @@
+<view class="page">
+  <!-- 提示词输入 -->
+  <view class="card">
+    <view class="section-label">输入描述</view>
+    <textarea
+      class="text-field"
+      placeholder="输入图片描述，例如：一只可爱的橘猫在阳光下打盹"
+      value="{{prompt}}"
+      maxlength="{{500}}"
+      bindinput="onPromptInput"
+    />
+    <view class="char-count">{{prompt.length}}/500</view>
+  </view>
+
+  <!-- 图片类型选择 -->
+  <view class="card">
+    <view class="section-label">图片类型</view>
+    <view class="type-tabs">
+      <view
+        class="type-tab {{imageType === item.value ? 'active' : ''}}"
+        wx:for="{{imageTypes}}"
+        wx:key="id"
+        data-type="{{item.value}}"
+        bindtap="onTypeChange"
+      >
+        {{item.label}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 预设案例 -->
+  <view class="card">
+    <view class="prompt-header">
+      <view class="section-label">提示词案例</view>
+      <view class="refresh-btn" bindtap="onRefreshPrompts">
+        <text class="refresh-icon">⟳</text>
+        <text class="refresh-text">换一批</text>
+      </view>
+    </view>
+    <view class="prompt-list">
+      <view
+        class="prompt-item"
+        wx:for="{{displayedPrompts}}"
+        wx:key="id"
+        data-text="{{item.text}}"
+        bindtap="onPromptSelect"
+      >
+        {{item.text}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 生成按钮 -->
+  <view class="action-wrap">
+    <button class="btn-primary" disabled="{{loading}}" bindtap="onGenerate">
+      {{loading ? '生成中...' : '生成图片'}}
+    </button>
+  </view>
+
+  <!-- 结果展示 -->
+  <image-result
+    wx:if="{{imageUrl}}"
+    imageUrl="{{imageUrl}}"
+    error="{{error}}"
+    bind:save="onSaveToAlbum"
+    bind:regenerate="onRegenerate"
+  />
+</view>

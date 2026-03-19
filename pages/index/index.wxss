@@ -1,0 +1,138 @@
+/* 首页样式 - Material Design 风格 */
+.page {
+  padding: 24rpx 32rpx 48rpx;
+  min-height: 100vh;
+}
+
+.card {
+  background: #fff;
+  border-radius: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.section-label {
+  font-size: 24rpx;
+  font-weight: 500;
+  color: #64748b;
+  letter-spacing: 0.05em;
+  margin-bottom: 24rpx;
+}
+
+.prompt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.prompt-header .section-label {
+  margin-bottom: 0;
+}
+
+.refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 12rpx 20rpx;
+  font-size: 24rpx;
+  color: #6366f1;
+}
+
+.refresh-btn:active {
+  opacity: 0.7;
+}
+
+.refresh-icon {
+  font-size: 32rpx;
+  line-height: 1;
+}
+
+.refresh-text {
+  line-height: 1;
+}
+
+.text-field {
+  width: 100%;
+  min-height: 160rpx;
+  padding: 24rpx 28rpx;
+  font-size: 28rpx;
+  color: #1e293b;
+  background: #f8fafc;
+  border: 2rpx solid #e2e8f0;
+  border-radius: 16rpx;
+  box-sizing: border-box;
+}
+
+.char-count {
+  font-size: 24rpx;
+  color: #94a3b8;
+  text-align: right;
+  margin-top: 12rpx;
+}
+
+.type-tabs {
+  display: flex;
+  gap: 20rpx;
+}
+
+.type-tab {
+  flex: 1;
+  padding: 24rpx 20rpx;
+  font-size: 28rpx;
+  text-align: center;
+  background: #f8fafc;
+  border: 2rpx solid #e2e8f0;
+  border-radius: 16rpx;
+  color: #64748b;
+  transition: all 0.2s;
+}
+
+.type-tab.active {
+  background: #e0e7ff;
+  border-color: #6366f1;
+  color: #4f46e5;
+  font-weight: 500;
+}
+
+.prompt-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.prompt-item {
+  padding: 24rpx 28rpx;
+  font-size: 26rpx;
+  color: #1e293b;
+  background: #f8fafc;
+  border-radius: 12rpx;
+  border: 2rpx solid transparent;
+  line-height: 1.5;
+}
+
+.prompt-item:active {
+  background: #e0e7ff;
+  border-color: #6366f1;
+}
+
+.action-wrap {
+  margin-top: 32rpx;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 28rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #fff;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  border: none;
+  border-radius: 16rpx;
+}
+
+.btn-primary[disabled] {
+  background: #94a3b8;
+  color: rgba(255, 255, 255, 0.8);
+}

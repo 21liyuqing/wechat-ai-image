@@ -1,0 +1,13 @@
+<view class="result-card">
+  <view class="section-label">生成结果</view>
+  <image
+    class="result-image"
+    src="{{imageUrl}}"
+    mode="aspectFit"
+    lazy-load
+  />
+  <view class="result-actions">
+    <button class="btn-secondary" bindtap="onSave">保存到相册</button>
+    <button class="btn-primary" bindtap="onRegenerate">重新生成</button>
+  </view>
+</view>
